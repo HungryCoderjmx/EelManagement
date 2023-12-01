@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ele.mappers.ChargeKnowledgeMapper">
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.ele.entity.po.ChargeKnowledge">		<!--标题-->
+		<result column="title" property="title"/>
+		<!--图片-->
+		<result column="charge_image" property="chargeImage"/>
+		<!--简介-->
+		<result column="charge_tips" property="chargeTips"/>
+		<!--内容-->
+		<result column="charge_content" property="chargeContent"/>
+	</resultMap>
+
+	<!--通用查询结果列-->
+	<sql id="base_column_list">
+		title,charge_image,charge_tips,charge_content
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.title != null and query.title !=''">
+			and title = #{query.title}
+		</if>
+		<if test="query.chargeImage != null and query.chargeImage !=''">
+			and charge_image = #{query.chargeImage}
+		</if>
+		<if test="query.chargeTips != null and query.chargeTips !=''">
+			and charge_tips = #{query.chargeTips}
+		</if>
+		<if test="query.chargeContent != null and query.chargeContent !=''">
+			and charge_content = #{query.chargeContent}
+		</if>
+	</sql>
+
+	<!--扩展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.titleFuzzy != null and query.titleFuzzy !=''">
+			 and title like concat('%', #{query.titleFuzzy}, '%')
+		</if>
+		<if test="query.chargeImageFuzzy != null and query.chargeImageFuzzy !=''">
+			 and charge_image like concat('%', #{query.chargeImageFuzzy}, '%')
+		</if>
+		<if test="query.chargeTipsFuzzy != null and query.chargeTipsFuzzy !=''">
+			 and charge_tips like concat('%', #{query.chargeTipsFuzzy}, '%')
+		</if>
+		<if test="query.chargeContentFuzzy != null and query.chargeContentFuzzy !=''">
+			 and charge_content like concat('%', #{query.chargeContentFuzzy}, '%')
+		</if>
+	</sql>
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--查询列表-->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM charge_knowledge <include refid="query_condition"/>
+		<if test="query.orderBy!=null">order by ${query.orderBy}</if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+	</select>
+
+	<!--查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM charge_knowledge <include refid="query_condition"/>
+	</select>
+
+	<!--单条插入-->
+	<insert id="insert" parameterType="com.ele.entity.po.ChargeKnowledge">
+
+			INSERT INTO charge_knowledge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.title !=null">
+				title,
+			</if>
+			<if test="bean.chargeImage !=null">
+				charge_image,
+			</if>
+			<if test="bean.chargeTips !=null">
+				charge_tips,
+			</if>
+			<if test="bean.chargeContent !=null">
+				charge_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.title !=null">
+				#{bean.title},
+			</if>
+			<if test="bean.chargeImage !=null">
+				#{bean.chargeImage},
+			</if>
+			<if test="bean.chargeTips !=null">
+				#{bean.chargeTips},
+			</if>
+			<if test="bean.chargeContent !=null">
+				#{bean.chargeContent},
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或者更新-->
+	<insert id="insertOrUpdate" parameterType="com.ele.entity.po.ChargeKnowledge">
+			INSERT INTO charge_knowledge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.title !=null">
+				title,
+			</if>
+			<if test="bean.chargeImage !=null">
+				charge_image,
+			</if>
+			<if test="bean.chargeTips !=null">
+				charge_tips,
+			</if>
+			<if test="bean.chargeContent !=null">
+				charge_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.title !=null">
+				#{bean.title},
+			</if>
+			<if test="bean.chargeImage !=null">
+				#{bean.chargeImage},
+			</if>
+			<if test="bean.chargeTips !=null">
+				#{bean.chargeTips},
+			</if>
+			<if test="bean.chargeContent !=null">
+				#{bean.chargeContent},
+			</if>
+		</trim>
+		on DUPLICATE key update
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.title !=null">
+				title = VALUES(title),
+			</if>
+			<if test="bean.chargeImage !=null">
+				charge_image = VALUES(charge_image),
+			</if>
+			<if test="bean.chargeTips !=null">
+				charge_tips = VALUES(charge_tips),
+			</if>
+			<if test="bean.chargeContent !=null">
+				charge_content = VALUES(charge_content),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.ele.entity.po.ChargeKnowledge">
+		INSERT INTO charge_knowledge (title,charge_image,charge_tips,charge_content)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.chargeImage},#{item.chargeTips},#{item.chargeContent})
+		</foreach>
+	</insert>
+
+	<!--批量插入或者更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.ele.entity.po.ChargeKnowledge">
+		INSERT INTO charge_knowledge (title,charge_image,charge_tips,charge_content)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.title},#{item.chargeImage},#{item.chargeTips},#{item.chargeContent})
+		</foreach>
+		on DUPLICATE key update
+			title= VALUES(title),charge_image= VALUES(charge_image),charge_tips= VALUES(charge_tips),charge_content= VALUES(charge_content)
+	</insert>
+
+</mapper>

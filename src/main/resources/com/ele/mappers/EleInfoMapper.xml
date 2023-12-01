@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ele.mappers.EleInfoMapper">
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.ele.entity.po.EleInfo">		<!--索引-->
+		<id column="id" property="id"/>
+		<!--电桩编号-->
+		<result column="number" property="number"/>
+		<!--电桩类别-->
+		<result column="type" property="type"/>
+		<!--图片-->
+		<result column="image_path" property="imagePath"/>
+		<!--输入电压-->
+		<result column="input_v" property="inputV"/>
+		<!--输出功率-->
+		<result column="output_w" property="outputW"/>
+		<!--所处位置-->
+		<result column="location" property="location"/>
+		<!--每时单价-->
+		<result column="money_h" property="moneyH"/>
+		<!--使用方式-->
+		<result column="use_way" property="useWay"/>
+		<!--注意事项-->
+		<result column="tips" property="tips"/>
+		<!--报修时间-->
+		<result column="report_time" property="reportTime"/>
+		<!--故障描述-->
+		<result column="error_describe" property="errorDescribe"/>
+		<!--维修状态-->
+		<result column="repair_status" property="repairStatus"/>
+	</resultMap>
+
+	<!--通用查询结果列-->
+	<sql id="base_column_list">
+		id,number,type,image_path,input_v,output_w,location,money_h,use_way,tips,report_time,error_describe,repair_status
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null">
+			and id = #{query.id}
+		</if>
+		<if test="query.number != null and query.number !=''">
+			and number = #{query.number}
+		</if>
+		<if test="query.type != null and query.type !=''">
+			and type = #{query.type}
+		</if>
+		<if test="query.imagePath != null and query.imagePath !=''">
+			and image_path = #{query.imagePath}
+		</if>
+		<if test="query.inputV != null">
+			and input_v = #{query.inputV}
+		</if>
+		<if test="query.outputW != null">
+			and output_w = #{query.outputW}
+		</if>
+		<if test="query.location != null and query.location !=''">
+			and location = #{query.location}
+		</if>
+		<if test="query.moneyH != null">
+			and money_h = #{query.moneyH}
+		</if>
+		<if test="query.useWay != null and query.useWay !=''">
+			and use_way = #{query.useWay}
+		</if>
+		<if test="query.tips != null and query.tips !=''">
+			and tips = #{query.tips}
+		</if>
+		<if test="query.reportTime != null">
+			and report_time = #{query.reportTime}
+		</if>
+		<if test="query.errorDescribe != null and query.errorDescribe !=''">
+			and error_describe = #{query.errorDescribe}
+		</if>
+		<if test="query.repairStatus != null">
+			and repair_status = #{query.repairStatus}
+		</if>
+	</sql>
+
+	<!--扩展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.numberFuzzy != null and query.numberFuzzy !=''">
+			 and number like concat('%', #{query.numberFuzzy}, '%')
+		</if>
+		<if test="query.typeFuzzy != null and query.typeFuzzy !=''">
+			 and type like concat('%', #{query.typeFuzzy}, '%')
+		</if>
+		<if test="query.imagePathFuzzy != null and query.imagePathFuzzy !=''">
+			 and image_path like concat('%', #{query.imagePathFuzzy}, '%')
+		</if>
+		<if test="query.locationFuzzy != null and query.locationFuzzy !=''">
+			 and location like concat('%', #{query.locationFuzzy}, '%')
+		</if>
+		<if test="query.useWayFuzzy != null and query.useWayFuzzy !=''">
+			 and use_way like concat('%', #{query.useWayFuzzy}, '%')
+		</if>
+		<if test="query.tipsFuzzy != null and query.tipsFuzzy !=''">
+			 and tips like concat('%', #{query.tipsFuzzy}, '%')
+		</if>
+		<if test="query.reportTimeStart != null and query.reportTimeStart !=''">
+			<![CDATA[ and report_time >= str_to_date(#{query.reportTimeStart}, '%Y-%m-%d' ]]>
+		</if>
+		<if test="query.reportTimeEnd != null and query.reportTimeEnd !=''">
+			<![CDATA[ and report_time < date_sub(str_to_date(#{query.reportTimeEnd}, '%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.errorDescribeFuzzy != null and query.errorDescribeFuzzy !=''">
+			 and error_describe like concat('%', #{query.errorDescribeFuzzy}, '%')
+		</if>
+	</sql>
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--查询列表-->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM ele_info <include refid="query_condition"/>
+		<if test="query.orderBy!=null">order by ${query.orderBy}</if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+	</select>
+
+	<!--查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM ele_info <include refid="query_condition"/>
+	</select>
+
+	<!--单条插入-->
+	<insert id="insert" parameterType="com.ele.entity.po.EleInfo">
+
+			INSERT INTO ele_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				id,
+			</if>
+			<if test="bean.number !=null">
+				number,
+			</if>
+			<if test="bean.type !=null">
+				type,
+			</if>
+			<if test="bean.imagePath !=null">
+				image_path,
+			</if>
+			<if test="bean.inputV !=null">
+				input_v,
+			</if>
+			<if test="bean.outputW !=null">
+				output_w,
+			</if>
+			<if test="bean.location !=null">
+				location,
+			</if>
+			<if test="bean.moneyH !=null">
+				money_h,
+			</if>
+			<if test="bean.useWay !=null">
+				use_way,
+			</if>
+			<if test="bean.tips !=null">
+				tips,
+			</if>
+			<if test="bean.reportTime !=null">
+				report_time,
+			</if>
+			<if test="bean.errorDescribe !=null">
+				error_describe,
+			</if>
+			<if test="bean.repairStatus !=null">
+				repair_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				#{bean.id},
+			</if>
+			<if test="bean.number !=null">
+				#{bean.number},
+			</if>
+			<if test="bean.type !=null">
+				#{bean.type},
+			</if>
+			<if test="bean.imagePath !=null">
+				#{bean.imagePath},
+			</if>
+			<if test="bean.inputV !=null">
+				#{bean.inputV},
+			</if>
+			<if test="bean.outputW !=null">
+				#{bean.outputW},
+			</if>
+			<if test="bean.location !=null">
+				#{bean.location},
+			</if>
+			<if test="bean.moneyH !=null">
+				#{bean.moneyH},
+			</if>
+			<if test="bean.useWay !=null">
+				#{bean.useWay},
+			</if>
+			<if test="bean.tips !=null">
+				#{bean.tips},
+			</if>
+			<if test="bean.reportTime !=null">
+				#{bean.reportTime},
+			</if>
+			<if test="bean.errorDescribe !=null">
+				#{bean.errorDescribe},
+			</if>
+			<if test="bean.repairStatus !=null">
+				#{bean.repairStatus},
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或者更新-->
+	<insert id="insertOrUpdate" parameterType="com.ele.entity.po.EleInfo">
+			INSERT INTO ele_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				id,
+			</if>
+			<if test="bean.number !=null">
+				number,
+			</if>
+			<if test="bean.type !=null">
+				type,
+			</if>
+			<if test="bean.imagePath !=null">
+				image_path,
+			</if>
+			<if test="bean.inputV !=null">
+				input_v,
+			</if>
+			<if test="bean.outputW !=null">
+				output_w,
+			</if>
+			<if test="bean.location !=null">
+				location,
+			</if>
+			<if test="bean.moneyH !=null">
+				money_h,
+			</if>
+			<if test="bean.useWay !=null">
+				use_way,
+			</if>
+			<if test="bean.tips !=null">
+				tips,
+			</if>
+			<if test="bean.reportTime !=null">
+				report_time,
+			</if>
+			<if test="bean.errorDescribe !=null">
+				error_describe,
+			</if>
+			<if test="bean.repairStatus !=null">
+				repair_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				#{bean.id},
+			</if>
+			<if test="bean.number !=null">
+				#{bean.number},
+			</if>
+			<if test="bean.type !=null">
+				#{bean.type},
+			</if>
+			<if test="bean.imagePath !=null">
+				#{bean.imagePath},
+			</if>
+			<if test="bean.inputV !=null">
+				#{bean.inputV},
+			</if>
+			<if test="bean.outputW !=null">
+				#{bean.outputW},
+			</if>
+			<if test="bean.location !=null">
+				#{bean.location},
+			</if>
+			<if test="bean.moneyH !=null">
+				#{bean.moneyH},
+			</if>
+			<if test="bean.useWay !=null">
+				#{bean.useWay},
+			</if>
+			<if test="bean.tips !=null">
+				#{bean.tips},
+			</if>
+			<if test="bean.reportTime !=null">
+				#{bean.reportTime},
+			</if>
+			<if test="bean.errorDescribe !=null">
+				#{bean.errorDescribe},
+			</if>
+			<if test="bean.repairStatus !=null">
+				#{bean.repairStatus},
+			</if>
+		</trim>
+		on DUPLICATE key update
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.number !=null">
+				number = VALUES(number),
+			</if>
+			<if test="bean.type !=null">
+				type = VALUES(type),
+			</if>
+			<if test="bean.imagePath !=null">
+				image_path = VALUES(image_path),
+			</if>
+			<if test="bean.inputV !=null">
+				input_v = VALUES(input_v),
+			</if>
+			<if test="bean.outputW !=null">
+				output_w = VALUES(output_w),
+			</if>
+			<if test="bean.location !=null">
+				location = VALUES(location),
+			</if>
+			<if test="bean.moneyH !=null">
+				money_h = VALUES(money_h),
+			</if>
+			<if test="bean.useWay !=null">
+				use_way = VALUES(use_way),
+			</if>
+			<if test="bean.tips !=null">
+				tips = VALUES(tips),
+			</if>
+			<if test="bean.reportTime !=null">
+				report_time = VALUES(report_time),
+			</if>
+			<if test="bean.errorDescribe !=null">
+				error_describe = VALUES(error_describe),
+			</if>
+			<if test="bean.repairStatus !=null">
+				repair_status = VALUES(repair_status),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.ele.entity.po.EleInfo">
+		INSERT INTO ele_info (id,number,type,image_path,input_v,output_w,location,money_h,use_way,tips,report_time,error_describe,repair_status)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.number},#{item.type},#{item.imagePath},#{item.inputV},#{item.outputW},#{item.location},#{item.moneyH},#{item.useWay},#{item.tips},#{item.reportTime},#{item.errorDescribe},#{item.repairStatus})
+		</foreach>
+	</insert>
+
+	<!--批量插入或者更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.ele.entity.po.EleInfo">
+		INSERT INTO ele_info (id,number,type,image_path,input_v,output_w,location,money_h,use_way,tips,report_time,error_describe,repair_status)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.number},#{item.type},#{item.imagePath},#{item.inputV},#{item.outputW},#{item.location},#{item.moneyH},#{item.useWay},#{item.tips},#{item.reportTime},#{item.errorDescribe},#{item.repairStatus})
+		</foreach>
+		on DUPLICATE key update
+			id= VALUES(id),number= VALUES(number),type= VALUES(type),image_path= VALUES(image_path),input_v= VALUES(input_v),output_w= VALUES(output_w),location= VALUES(location),money_h= VALUES(money_h),use_way= VALUES(use_way),tips= VALUES(tips),report_time= VALUES(report_time),error_describe= VALUES(error_describe),repair_status= VALUES(repair_status)
+	</insert>
+
+
+	<!--根据Id查询-->
+	<select id="selectById" resultMap="base_result_map">
+		select <include refid="base_column_list"/> from ele_info where id=#{id}
+	</select>
+
+	<!--根据Id更新-->
+	<update id="updateById" parameterType="com.ele.entity.po.EleInfo">
+		update ele_info
+		<set>
+			<if test="bean.id != null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.number != null">
+				number = #{bean.number},
+			</if>
+			<if test="bean.type != null">
+				type = #{bean.type},
+			</if>
+			<if test="bean.imagePath != null">
+				image_path = #{bean.imagePath},
+			</if>
+			<if test="bean.inputV != null">
+				input_v = #{bean.inputV},
+			</if>
+			<if test="bean.outputW != null">
+				output_w = #{bean.outputW},
+			</if>
+			<if test="bean.location != null">
+				location = #{bean.location},
+			</if>
+			<if test="bean.moneyH != null">
+				money_h = #{bean.moneyH},
+			</if>
+			<if test="bean.useWay != null">
+				use_way = #{bean.useWay},
+			</if>
+			<if test="bean.tips != null">
+				tips = #{bean.tips},
+			</if>
+			<if test="bean.reportTime != null">
+				report_time = #{bean.reportTime},
+			</if>
+			<if test="bean.errorDescribe != null">
+				error_describe = #{bean.errorDescribe},
+			</if>
+			<if test="bean.repairStatus != null">
+				repair_status = #{bean.repairStatus},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<!--根据Id删除-->
+	<delete id="deleteById">
+		delete from ele_info where id=#{id}
+	</delete>
+</mapper>

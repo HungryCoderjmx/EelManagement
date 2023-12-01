@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+
+<body>
+<div id="loginDiv">
+    <form action="http://localhost:8088/userInfo/login" method="post" id="form">
+        <h1 id="loginMsg">LOGIN IN</h1>
+        <p>Account:<input id="account" name="account" type="text"></p>
+
+        <p>Password:<input id="password" name="password" type="password"></p>
+
+        <p>identityStatus:<input id="identityStatus" name="identityStatus" type="text"></p>
+
+        <div id="subDiv">
+            <input type="submit" class="button" value="login up">
+            <input type="reset" class="button" value="reset">&nbsp;&nbsp;&nbsp;
+            <a href="admin.html">管理员登录</a>
+            <a href="register.html">没有账号？点击注册</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

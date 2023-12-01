@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ele.mappers.UserInfoMapper">
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.ele.entity.po.UserInfo">		<!--索引-->
+		<result column="id" property="id"/>
+		<!--账户-->
+		<result column="account" property="account"/>
+		<!--用户名-->
+		<result column="username" property="username"/>
+		<!--密码-->
+		<result column="password" property="password"/>
+		<!--年龄-->
+		<result column="age" property="age"/>
+		<!--性别-->
+		<result column="sex" property="sex"/>
+		<!--联系电话-->
+		<result column="phone_number" property="phoneNumber"/>
+		<!--维修工号-->
+		<result column="engineer_id" property="engineerId"/>
+		<!--地址-->
+		<result column="address" property="address"/>
+		<!--身份状态-->
+		<result column="identity_status" property="identityStatus"/>
+	</resultMap>
+
+	<!--通用查询结果列-->
+	<sql id="base_column_list">
+		id,account,username,password,age,sex,phone_number,engineer_id,address,identity_status
+	</sql>
+
+	<!--基础查询条件-->
+	<sql id="base_query_condition">
+		<if test="query.id != null">
+			and id = #{query.id}
+		</if>
+		<if test="query.account != null and query.account !=''">
+			and account = #{query.account}
+		</if>
+		<if test="query.username != null and query.username !=''">
+			and username = #{query.username}
+		</if>
+		<if test="query.password != null and query.password !=''">
+			and password = #{query.password}
+		</if>
+		<if test="query.age != null">
+			and age = #{query.age}
+		</if>
+		<if test="query.sex != null and query.sex !=''">
+			and sex = #{query.sex}
+		</if>
+		<if test="query.phoneNumber != null and query.phoneNumber !=''">
+			and phone_number = #{query.phoneNumber}
+		</if>
+		<if test="query.engineerId != null">
+			and engineer_id = #{query.engineerId}
+		</if>
+		<if test="query.address != null and query.address !=''">
+			and address = #{query.address}
+		</if>
+		<if test="query.identityStatus != null">
+			and identity_status = #{query.identityStatus}
+		</if>
+	</sql>
+
+	<!--扩展查询条件-->
+	<sql id="base_query_condition_extend">
+		<if test="query.accountFuzzy != null and query.accountFuzzy !=''">
+			 and account like concat('%', #{query.accountFuzzy}, '%')
+		</if>
+		<if test="query.usernameFuzzy != null and query.usernameFuzzy !=''">
+			 and username like concat('%', #{query.usernameFuzzy}, '%')
+		</if>
+		<if test="query.passwordFuzzy != null and query.passwordFuzzy !=''">
+			 and password like concat('%', #{query.passwordFuzzy}, '%')
+		</if>
+		<if test="query.sexFuzzy != null and query.sexFuzzy !=''">
+			 and sex like concat('%', #{query.sexFuzzy}, '%')
+		</if>
+		<if test="query.phoneNumberFuzzy != null and query.phoneNumberFuzzy !=''">
+			 and phone_number like concat('%', #{query.phoneNumberFuzzy}, '%')
+		</if>
+		<if test="query.addressFuzzy != null and query.addressFuzzy !=''">
+			 and address like concat('%', #{query.addressFuzzy}, '%')
+		</if>
+	</sql>
+	<!--通用查询条件-->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+	</sql>
+
+	<!--查询列表-->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM user_info <include refid="query_condition"/>
+		<if test="query.orderBy!=null">order by ${query.orderBy}</if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+	</select>
+
+	<!--查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM user_info <include refid="query_condition"/>
+	</select>
+
+	<!--单条插入-->
+	<insert id="insert" parameterType="com.ele.entity.po.UserInfo">
+			INSERT INTO user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				id,
+			</if>
+			<if test="bean.account !=null">
+				account,
+			</if>
+			<if test="bean.username !=null">
+				username,
+			</if>
+			<if test="bean.password !=null">
+				password,
+			</if>
+			<if test="bean.age !=null">
+				age,
+			</if>
+			<if test="bean.sex !=null">
+				sex,
+			</if>
+			<if test="bean.phoneNumber !=null">
+				phone_number,
+			</if>
+			<if test="bean.engineerId !=null">
+				engineer_id,
+			</if>
+			<if test="bean.address !=null">
+				address,
+			</if>
+			<if test="bean.identityStatus !=null">
+				identity_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				#{bean.id},
+			</if>
+			<if test="bean.account !=null">
+				#{bean.account},
+			</if>
+			<if test="bean.username !=null">
+				#{bean.username},
+			</if>
+			<if test="bean.password !=null">
+				#{bean.password},
+			</if>
+			<if test="bean.age !=null">
+				#{bean.age},
+			</if>
+			<if test="bean.sex !=null">
+				#{bean.sex},
+			</if>
+			<if test="bean.phoneNumber !=null">
+				#{bean.phoneNumber},
+			</if>
+			<if test="bean.engineerId !=null">
+				#{bean.engineerId},
+			</if>
+			<if test="bean.address !=null">
+				#{bean.address},
+			</if>
+			<if test="bean.identityStatus !=null">
+				#{bean.identityStatus},
+			</if>
+		</trim>
+	</insert>
+
+	<!--插入或者更新-->
+	<insert id="insertOrUpdate" parameterType="com.ele.entity.po.UserInfo">
+			INSERT INTO user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				id,
+			</if>
+			<if test="bean.account !=null">
+				account,
+			</if>
+			<if test="bean.username !=null">
+				username,
+			</if>
+			<if test="bean.password !=null">
+				password,
+			</if>
+			<if test="bean.age !=null">
+				age,
+			</if>
+			<if test="bean.sex !=null">
+				sex,
+			</if>
+			<if test="bean.phoneNumber !=null">
+				phone_number,
+			</if>
+			<if test="bean.engineerId !=null">
+				engineer_id,
+			</if>
+			<if test="bean.address !=null">
+				address,
+			</if>
+			<if test="bean.identityStatus !=null">
+				identity_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id !=null">
+				#{bean.id},
+			</if>
+			<if test="bean.account !=null">
+				#{bean.account},
+			</if>
+			<if test="bean.username !=null">
+				#{bean.username},
+			</if>
+			<if test="bean.password !=null">
+				#{bean.password},
+			</if>
+			<if test="bean.age !=null">
+				#{bean.age},
+			</if>
+			<if test="bean.sex !=null">
+				#{bean.sex},
+			</if>
+			<if test="bean.phoneNumber !=null">
+				#{bean.phoneNumber},
+			</if>
+			<if test="bean.engineerId !=null">
+				#{bean.engineerId},
+			</if>
+			<if test="bean.address !=null">
+				#{bean.address},
+			</if>
+			<if test="bean.identityStatus !=null">
+				#{bean.identityStatus},
+			</if>
+		</trim>
+		on DUPLICATE key update
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.username !=null">
+				username = VALUES(username),
+			</if>
+			<if test="bean.password !=null">
+				password = VALUES(password),
+			</if>
+			<if test="bean.age !=null">
+				age = VALUES(age),
+			</if>
+			<if test="bean.sex !=null">
+				sex = VALUES(sex),
+			</if>
+			<if test="bean.phoneNumber !=null">
+				phone_number = VALUES(phone_number),
+			</if>
+			<if test="bean.engineerId !=null">
+				engineer_id = VALUES(engineer_id),
+			</if>
+			<if test="bean.address !=null">
+				address = VALUES(address),
+			</if>
+			<if test="bean.identityStatus !=null">
+				identity_status = VALUES(identity_status),
+			</if>
+		</trim>
+	</insert>
+
+	<!--批量插入-->
+	<insert id="insertBatch" parameterType="com.ele.entity.po.UserInfo">
+		INSERT INTO user_info (id,account,username,password,age,sex,phone_number,engineer_id,address,identity_status)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.account},#{item.username},#{item.password},#{item.age},#{item.sex},#{item.phoneNumber},#{item.engineerId},#{item.address},#{item.identityStatus})
+		</foreach>
+	</insert>
+
+	<!--批量插入或者更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.ele.entity.po.UserInfo">
+		INSERT INTO user_info (id,account,username,password,age,sex,phone_number,engineer_id,address,identity_status)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.account},#{item.username},#{item.password},#{item.age},#{item.sex},#{item.phoneNumber},#{item.engineerId},#{item.address},#{item.identityStatus})
+		</foreach>
+		on DUPLICATE key update
+			id= VALUES(id),account= VALUES(account),username= VALUES(username),password= VALUES(password),age= VALUES(age),sex= VALUES(sex),phone_number= VALUES(phone_number),engineer_id= VALUES(engineer_id),address= VALUES(address),identity_status= VALUES(identity_status)
+	</insert>
+
+
+	<!--根据IdAndAccount查询-->
+	<select id="selectByIdAndAccount" resultMap="base_result_map">
+		select <include refid="base_column_list"/> from user_info where id=#{id} and account=#{account}
+	</select>
+	<!--根据Account查询-->
+	<select id="selectByAccount" resultMap="base_result_map">
+		select <include refid="base_column_list"/> from user_info where account=#{account}
+	</select>
+	<select id="findByAccount" resultMap="base_result_map">
+		select <include refid="base_column_list"/> from user_info where account=#{account}
+	</select>
+
+
+	<!--根据IdAndAccount更新-->
+	<update id="updateByIdAndAccount" parameterType="com.ele.entity.po.UserInfo">
+		update user_info
+		<set>
+			<if test="bean.id != null">
+				id = #{bean.id},
+			</if>
+			<if test="bean.account != null">
+				account = #{bean.account},
+			</if>
+			<if test="bean.username != null">
+				username = #{bean.username},
+			</if>
+			<if test="bean.password != null">
+				password = #{bean.password},
+			</if>
+			<if test="bean.age != null">
+				age = #{bean.age},
+			</if>
+			<if test="bean.sex != null">
+				sex = #{bean.sex},
+			</if>
+			<if test="bean.phoneNumber != null">
+				phone_number = #{bean.phoneNumber},
+			</if>
+			<if test="bean.engineerId != null">
+				engineer_id = #{bean.engineerId},
+			</if>
+			<if test="bean.address != null">
+				address = #{bean.address},
+			</if>
+			<if test="bean.identityStatus != null">
+				identity_status = #{bean.identityStatus},
+			</if>
+		</set>
+		where id=#{id} and account=#{account}
+	</update>
+
+	<!--根据IdAndAccount删除-->
+	<delete id="deleteByIdAndAccount">
+		delete from user_info where id=#{id} and account=#{account}
+	</delete>
+</mapper>
